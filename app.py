@@ -11,12 +11,10 @@ columns = joblib.load("columns.pkl")
 
 # Title
 st.title("🏨 Hotel Booking Risk Checker")
-
 st.write("Enter simple booking details to estimate if a customer might cancel.")
-
 st.markdown("---")
 
-# Layout (two columns for cleaner UI)
+# Layout
 col1, col2 = st.columns(2)
 
 with col1:
@@ -33,23 +31,14 @@ st.markdown("---")
 # Predict button
 if st.button("🔍 Check Booking Risk"):
 
+    # ✅ بناء الـ input بشكل صحيح
     input_data = pd.DataFrame([[0]*len(columns)], columns=columns)
 
-    # Fill values (mapping to model features)
-    if 'lead_time' in input_data:
-        input_data['lead_time'] = lead_time
-
-    if 'avg_price_per_room' in input_data:
-        input_data['avg_price_per_room'] = price
-
-    if 'no_of_adults' in input_data:
-        input_data['no_of_adults'] = adults
-
-    if 'no_of_children' in input_data:
-        input_data['no_of_children'] = children
-
-    if 'no_of_special_requests' in input_data:
-        input_data['no_of_special_requests'] = special_requests
+    input_data['lead_time'] = lead_time
+    input_data['avg_price_per_room'] = price
+    input_data['no_of_adults'] = adults
+    input_data['no_of_children'] = children
+    input_data['no_of_special_requests'] = special_requests
 
     # Prediction
     prediction = model.predict(input_data)[0]
@@ -60,10 +49,10 @@ if st.button("🔍 Check Booking Risk"):
     if prediction == "Canceled":
         st.error("⚠️ High risk: This booking may be canceled")
         st.progress(int(prob[0]*100))
-        st.write(f"Estimated cancellation risk: **{round(prob[0]*100, 2)}%**")
+        st.write(f"Estimated cancellation risk: {round(prob[0]*100, 2)}%")
     else:
         st.success("✅ Low risk: This booking is likely to be confirmed")
         st.progress(int(prob[1]*100))
-        st.write(f"Estimated confirmation probability: **{round(prob[1]*100, 2)}%**")
+        st.write(f"Estimated confirmation probability: {round(prob[1]*100, 2)}%")
 
     st.info("Tip: Early bookings with fewer special requests are more likely to be canceled.")
